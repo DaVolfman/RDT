@@ -14,6 +14,23 @@ const int RDT_RETRY_LIMIT = 3;
 static int drop_q = 0;
 static int corrupt_q = 0;
 
+uint16_t checksum_of(void * buffer, size_t length){
+	uint32_t intermediate;
+	uint16_t sum = 0;
+	uint16_t term;
+	size_t i;
+	
+	for(i = 0; i < length; i+=2){
+		term = 0;
+		memcpy((void*)&term,buffer+i,2);
+		
+		intermediate = (uint32_t)sum + (uint32_t)term;
+		sum = (uint16_t) (intermediate / 0x100 + (intermediate % 0x100));
+		sum = 0xFFFF - sum;
+	}
+	return sum;
+}
+
 int rdt_socket(int addr_family, int type, int protocol){
 	return socket(addr_family, type, protocol);
 }
@@ -68,6 +85,8 @@ int rdt_send(int sockd, char* buffer, int bufflen, int flags, struct sockaddr* a
 			senddata.body[1] = senddata.body[1] ^ 0xFF;
 		if(probD >= drop_q)
 			sendto(sockd, (void*)&senddata, senddata.header.length + sizeof(senddata.header), flags, addrto, addrlen);
+		else
+			fprintf(stderr,"Packet intentionally dropped.\n");
 		
 		FD_ZERO(&sel_set);
 		FD_SET(sockd, &sel_set);
@@ -102,6 +121,7 @@ int rdt_recv(int sockd, char* buffer, int bufflen, int flags, struct sockaddr* a
 	while(!done && received_to < bufflen){
 		if((recvfrom(sockd, (void*)&thepacket, sizeof(thepacket), flags, addrfrom, addrlen) <= 0))
 			return 0 - received_to;
+			
 		sumrcvd = thepacket.header.checksum;
 		thepacket.header.checksum = 0;
 		sumcalcd = checksum_of((void*)&thepacket,sizeof(thepacket.header)+thepacket.header.length);

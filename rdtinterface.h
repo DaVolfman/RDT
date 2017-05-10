@@ -2,6 +2,7 @@
 #define _RDT_FUNCS
 
 #include <sys/socket.h>
+#include <stdint.h>
 
 
 int rdt_socket(int addr_family, int type, int protocol);
@@ -11,6 +12,6 @@ int rdt_send(int sockd, char* buffer, int bufflen, int flags, struct sockaddr* a
 int rdt_close(int fd);
 int set_drop_q(int mils);
 int set_corrupt_q(int mils);
-
+uint16_t checksum_of(void * buffer, size_t length);
 
 #endif

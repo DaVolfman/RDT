@@ -20,8 +20,8 @@ int main(int argc, char** argv){
 	struct sockaddr_in dest, dummy;
 	socklen_t dummysize;
 	
-	if(argc != 4){
-		fprintf(stderr,"usage: %s <filename> <IP address> <port number>\n", argv[0]);
+	if(argc != 6){
+		fprintf(stderr,"usage: %s <filename> <IP address> <port number> <drop rate mils> <error rate mils>\n", argv[0]);
 		return -1;
 	}
 	
@@ -32,6 +32,10 @@ int main(int argc, char** argv){
 	sockd = rdt_socket(AF_INET,SOCK_DGRAM,0);
 	dest.sin_port = htons(atoi(argv[3]));
 	dest.sin_addr.s_addr = inet_addr(argv[2]);
+	dest.sin_family = AF_INET;
+	
+	set_drop_q(atoi(argv[4]));
+	set_corrupt_q(atoi(argv[5]));
 	
 	status = rdt_send(sockd,(char*)buffer,filestat.st_size,0,(struct sockaddr*)&dest,(socklen_t)(sizeof(dest)));
 	

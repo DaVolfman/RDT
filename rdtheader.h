@@ -23,21 +23,4 @@ struct RDTpacket{
 	char body[RDT_PACKLEN - RDT_HEADLEN];
 };
 
-uint16_t checksum_of(void * buffer, size_t length){
-	uint32_t intermediate;
-	uint16_t sum = 0;
-	uint16_t term;
-	size_t i;
-	
-	for(i = 0; i < length; i+=2){
-		term = 0;
-		memcpy((void*)&term,buffer+i,2);
-		
-		intermediate = (uint32_t)sum + (uint32_t)term;
-		sum = (uint16_t) (intermediate / 0x100 + (intermediate % 0x100));
-		sum = 0xFFFF - sum;
-	}
-	return sum;
-}
-
 #endif

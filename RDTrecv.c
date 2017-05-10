@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include "rdtinterface.h"
 
-static const size_t buffsize = 8388608;//8 MB
+static const size_t buffsize = 65535;
 
 int main(int argc, char** argv){
 	struct sockaddr_in source;
@@ -33,6 +33,7 @@ int main(int argc, char** argv){
 		return 2;
 	}
 	
+	fprintf(stderr,"Listening for messages\n");
 	while(1){
 		bzero((void*)&buffer,buffsize);
 		status = rdt_recv(sockd,buffer,buffsize,0,(struct sockaddr*)&source,&sourcelen);
