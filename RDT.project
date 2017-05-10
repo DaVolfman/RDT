@@ -8,14 +8,13 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="RDT">
-    <File Name="RDTsender.c"/>
     <File Name="talkback.c"/>
     <File Name="talker.c"/>
     <File Name="rdtheader.h"/>
-    <File Name="RDTwriter.c"/>
     <File Name="checksummer.c"/>
-    <File Name="rdtinterface.c"/>
     <File Name="rdtinterface.h"/>
+    <File Name="RDTsend.c"/>
+    <File Name="rdtinterface.c"/>
   </VirtualDirectory>
   <Settings Type="Dynamic Library">
     <GlobalSettings>
