@@ -8,10 +8,7 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="RDT">
-    <File Name="talkback.c"/>
-    <File Name="talker.c"/>
     <File Name="rdtheader.h"/>
-    <File Name="checksummer.c"/>
     <File Name="rdtinterface.h"/>
     <File Name="RDTsend.c"/>
     <File Name="rdtinterface.c"/>
